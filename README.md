@@ -27,3 +27,13 @@ Une API doit être mise à disposition. Cette API ne doit pas être sécurisée.
   •lister toutes les sorties  
   •lister les sorties d'un utilisateur  
   •récupérer le détail d'une sortie  
+
+------
+Description des étapes réalisées :  
+1/ Création de l'entité "User" et de son repository  
+Commande utilisée "php bin/console make:entity User"  
+Migration créée pour modification de la base de données via Doctrine  
+
+2/ Création d'une fixture prenant en charge les "User"  
+Installation du bundle DoctrineFixturesBundle via la commande "composer require --dev orm-fixtures" (ceci permet de charger rapidement de petits volumes de données de test)
+Modification de la fixture pour prise en charge de la création de données dans la table "User" via la commande "php bin/console doctrine:fixtures:load"
