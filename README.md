@@ -36,4 +36,11 @@ Migration créée pour modification de la base de données via Doctrine
 
 2/ Création d'une fixture prenant en charge les "User"  
 Installation du bundle DoctrineFixturesBundle via la commande "composer require --dev orm-fixtures" (ceci permet de charger rapidement de petits volumes de données de test)
-Modification de la fixture pour prise en charge de la création de données dans la table "User" via la commande "php bin/console doctrine:fixtures:load"
+Modification de la fixture pour prise en charge de la création de données dans la table "user" via la commande "php bin/console doctrine:fixtures:load"
+
+3/ Création de l'entité "OutingType" et de son repository  
+Commande utilisée "php bin/console make:entity OutingType"  
+Migration créée pour modification de la base de données via Doctrine  
+
+4/ Création de la fixture pour prise en charge des "OutingType"  
+Modification de la fixture pour prise en charge de la création de données dans la table "outing_type" via la commande "php bin/console doctrine:fixtures:load"
