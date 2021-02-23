@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use Faker\Factory;
 use App\Entity\User;
+use App\Entity\OutingType;
 use Cocur\Slugify\Slugify;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
@@ -31,6 +32,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $this->loadUsers($manager, 10);
+        $this->loadOutingTypes($manager, 5);
 
         $manager->flush();
     }
@@ -51,6 +53,21 @@ class AppFixtures extends Fixture
             ->setSlug($this->slugify->slugify($user->getFirstName() . " " . $user->getLastName()));
             
             $manager->persist($user);
+        }
+        $manager->flush();
+    }
+
+    /**
+     * Creates $outingTypesNb random outingTypes
+     * 
+     * @param ObjectManager $manager
+     * @param int $outingTypesNb
+     */
+    public function loadOutingTypes($manager, $outingTypesNb){
+        for ($i = 0; $i < $outingTypesNb; $i++){
+            $outingType = new OutingType();
+            $outingType->setTitle($this->faker->sentence(2));
+            $manager->persist($outingType);
         }
         $manager->flush();
     }
