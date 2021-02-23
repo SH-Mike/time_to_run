@@ -4,37 +4,47 @@ namespace App\DataFixtures;
 
 use Faker\Factory;
 use App\Entity\User;
+use App\Entity\Outing;
 use App\Entity\OutingType;
 use Cocur\Slugify\Slugify;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
+use App\Repository\OutingTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class AppFixtures extends Fixture
 {
     private $userRepository;
+    private $outingTypeRepository;
     private $slugify;
     private $faker;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, OutingTypeRepository $outingTypeRepository)
     {
         $this->userRepository = $userRepository;
+        $this->outingTypeRepository = $outingTypeRepository;
         $this->slugify = new Slugify();
         $this->faker = Factory::create();
     }
 
     /**
      * We first load some random Users
+     * We then load some random OutingTypes
+     * Finaly, after creating Users and OutingTypes, we use them to load some random Outings
      * 
      * @param ObjectManager
      */
     public function load(ObjectManager $manager)
     {
+        // Users loading
         $this->loadUsers($manager, 10);
+
+        // OutingTypes loading
         $this->loadOutingTypes($manager, 5);
 
-        $manager->flush();
+        // Outing loading
+        $this->loadOutings($manager, 15, $this->userRepository, $this->outingTypeRepository);
     }
 
     /**
@@ -68,6 +78,31 @@ class AppFixtures extends Fixture
             $outingType = new OutingType();
             $outingType->setTitle($this->faker->sentence(2));
             $manager->persist($outingType);
+        }
+        $manager->flush();
+    }
+
+    /**
+     * Creates $outingNb random outings
+     * 
+     * @param ObjectManager $manager
+     * @param int $outingNb
+     * @param UserRepository $userRepository
+     * @param OutingTypeRepository $outingTypeRepository
+     */
+    public function loadOutings($manager, $outingNb, $userRepository, $outingTypeRepository){
+        $users = $userRepository->findAll();
+        $outingTypes = $outingTypeRepository->findAll();
+        for ($i = 0; $i < $outingNb; $i++){
+            $outing = new Outing();
+            $outing->setUser($users[rand(0, sizeof($users) - 1)])
+            ->setOutingType($outingTypes[rand(0, sizeof($outingTypes) - 1)])
+            ->setStartDate($this->faker->dateTimeBetween('yesterday', 'now'))
+            ->setEndDate($this->faker->dateTimeBetween($outing->getStartDate()))
+            ->setDistance($this->faker->randomFloat(1,0,50))
+            ->setComment($this->faker->sentence())
+            ;
+            $manager->persist($outing);
         }
         $manager->flush();
     }
