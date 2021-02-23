@@ -42,11 +42,6 @@ class Outing
     /**
      * @ORM\Column(type="float")
      */
-    private $duration;
-
-    /**
-     * @ORM\Column(type="float")
-     */
     private $distance;
 
     /**
@@ -103,18 +98,6 @@ class Outing
     public function setEndDate(\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    public function getDuration(): ?float
-    {
-        return $this->duration;
-    }
-
-    public function setDuration(float $duration): self
-    {
-        $this->duration = $duration;
 
         return $this;
     }
