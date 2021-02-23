@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +43,16 @@ class User
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $outings;
+
+    public function __construct()
+    {
+        $this->outings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +115,36 @@ class User
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Outing[]
+     */
+    public function getOutings(): Collection
+    {
+        return $this->outings;
+    }
+
+    public function addOuting(Outing $outing): self
+    {
+        if (!$this->outings->contains($outing)) {
+            $this->outings[] = $outing;
+            $outing->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOuting(Outing $outing): self
+    {
+        if ($this->outings->removeElement($outing)) {
+            // set the owning side to null (unless already changed)
+            if ($outing->getUser() === $this) {
+                $outing->setUser(null);
+            }
+        }
 
         return $this;
     }
