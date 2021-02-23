@@ -42,5 +42,13 @@ Modification de la fixture pour prise en charge de la création de données dans
 Commande utilisée "php bin/console make:entity OutingType"  
 Migration créée pour modification de la base de données via Doctrine  
 
-4/ Création de la fixture pour prise en charge des "OutingType"  
+4/ Modification de la fixture pour prise en charge des "OutingType"  
 Modification de la fixture pour prise en charge de la création de données dans la table "outing_type" via la commande "php bin/console doctrine:fixtures:load"
+
+5/ Création de l'entité "Outing" et de son repository  
+Commande utilisée "php bin/console make:entity OutingType"
+Liaison avec l'entité "User" et l'entité "OutingType"  
+Migration créée pour modification de la base de données via Doctrine  
+
+6/ Modification de la fixture pour prise en charge des "Outing" 
+Modification de la fixture pour prise en charge de la création de données dans la table "outing" via la commande "php bin/console doctrine:fixtures:load"
