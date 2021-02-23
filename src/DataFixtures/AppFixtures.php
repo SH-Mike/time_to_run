@@ -12,6 +12,7 @@ use Doctrine\Persistence\ObjectManager;
 use App\Repository\OutingTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
@@ -19,13 +20,15 @@ class AppFixtures extends Fixture
     private $outingTypeRepository;
     private $slugify;
     private $faker;
+    private $encoder;
 
-    public function __construct(UserRepository $userRepository, OutingTypeRepository $outingTypeRepository)
+    public function __construct(UserRepository $userRepository, OutingTypeRepository $outingTypeRepository, UserPasswordEncoderInterface $encoder)
     {
         $this->userRepository = $userRepository;
         $this->outingTypeRepository = $outingTypeRepository;
         $this->slugify = new Slugify();
         $this->faker = Factory::create();
+        $this->encoder = $encoder;
     }
 
     /**
@@ -60,7 +63,8 @@ class AppFixtures extends Fixture
             ->setLastName($this->faker->lastName())
             ->setBirthDate($this->faker->dateTime('now'))
             ->setEmail($this->faker->email())
-            ->setSlug($this->slugify->slugify($user->getFirstName() . " " . $user->getLastName()));
+            ->setSlug($this->slugify->slugify($user->getFirstName() . " " . $user->getLastName()))
+            ->setPassword($this->encoder->encodePassword($user, 123123123));
             
             $manager->persist($user);
         }
