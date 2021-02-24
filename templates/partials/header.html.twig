@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+	<a class="navbar-brand" href="{{path('home')}}">Time to run...<i class="fas fa-running"></i>
+	</a>
+
+	<div class="collapse navbar-collapse" id="navbarColor02">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="{{path('home')}}">
+					<i class="fas fa-home"></i>
+					- Accueil
+				</a>
+			</li>
+			{% if app.user %}
+				<li class="nav-item">
+					<div class="nav-link">
+						<i class="fas fa-smile"></i>
+						{{app.user.firstName}}
+						{{app.user.lastName}}
+					</div>
+				</li>
+			{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="{{path('login')}}">
+						<i class="fas fa-sign-in-alt"></i>
+						- Connexion
+					</a>
+				</li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
+{% for label, messages in app.flashes %}
+	<div class="container">
+		<div class="alert alert-{{label}}">
+			{% for message in messages %}
+				<p>{{message | raw}}</p>
+			{% endfor %}
+		</div>
+	</div>
+{% endfor %}
