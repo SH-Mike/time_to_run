@@ -125,4 +125,14 @@ class Outing
 
         return $this;
     }
+
+    /**
+     * Duration is a calculated data, so we won't store it in database
+     */
+    public function getDuration(): ?float
+    {
+        $dateDifference = $this->getEndDate()->diff($this->getStartDate());
+        $duration = number_format(($dateDifference->days * 24) + $dateDifference->h + ($dateDifference->i / 60), 2);
+        return $duration;
+    }
 }
