@@ -10,7 +10,7 @@
 
 		<p>
 			Vous souhaitez ajouter une nouvelle sortie ?
-			<a href="#" class="btn btn-success">Cliquez-ici</a>
+			<a href="{{path("outings_add")}}" class="btn btn-success">Cliquez-ici</a>
 		</p>
 		<div class="table-responsive mt-5">
 			<table class="table table-hover table-stripped">
@@ -40,10 +40,10 @@
 								<td>{{outing.formattedAveragePace}}</td>
 								<td>{{outing.comment | raw}}</td>
 								<td>
-									<a href="#" class="btn btn-warning">
+									<a href="{{path('outings_edit', {'outing':outing.id})}}" class="btn btn-warning">
 										<i class="fas fa-pen"></i>
 									</a>
-									<a href="#" class="btn btn-danger">
+									<a href="{#path('outings_delete', {'outing': outing.id})#}" class="btn btn-danger">
 										<i class='fas fa-trash'></i>
 									</a>
 								</td>

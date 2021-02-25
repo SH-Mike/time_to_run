@@ -35,7 +35,7 @@ class OutingController extends AbstractController
     }
 
     /**
-     * Adds a Outing to the database from the submitted form, if not submitted, shows the form
+     * Adds an Outing to the database from the submitted form, if not submitted, shows the form
      * 
      * @param Request $request
      * 
@@ -43,13 +43,23 @@ class OutingController extends AbstractController
      * 
      * @Route("/outings/add", name="outings_add")
      */
-    public function addOuting(Request $request)
+    public function addOuting(Request $request): Response
     {
         $outing = new Outing();
         $form = $this->createForm(OutingTypeForm::class, $outing);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            if($outing->getStartDate() >= $outing->getEndDate()){
+                $this->addFlash('danger', "A moins de courir plus vite que la vitesse de la lumière ou de maîtriser le voyage temporel, il est impossible de terminer avant d'avoir commencé");
+                return $this->redirectToRoute('outings_add');
+            }
+
+            if($outing->getEndDate() > new \DateTime('now')){
+                $this->addFlash('danger', "A moins de maîtriser le voyage temporel, il est impossible de terminer après la date actuelle");
+                return $this->redirectToRoute('outings_add');
+            }
+
             $outing->setUser($this->getUser());
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($outing);
@@ -60,6 +70,52 @@ class OutingController extends AbstractController
 
         return $this->render('outing/add.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Edits an Outing from the submitted form, if not submitted, shows the form
+     * 
+     * @param Request $request
+     * @param Outing $outing
+     * 
+     * @return Response
+     * 
+     * @Route("/outings/edit/{outing}", name="outings_edit")
+     */
+    public function editOuting(Request $request, Outing $outing = null): Response
+    {
+        if(!$outing){
+            $this->addFlash("danger", "La sortie que vous souhaitez modifier n'existe pas");
+            return $this->redirectToRoute("outings_index");
+        }
+
+        $form = $this->createForm(OutingTypeForm::class, $outing);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            if($outing->getStartDate() >= $outing->getEndDate()){
+                $this->addFlash('danger', "A moins de courir plus vite que la vitesse de la lumière ou de maîtriser le voyage temporel, il est impossible de terminer avant d'avoir commencé");
+                return $this->redirectToRoute('outings_edit', ['outing' => $outing->getId()]);
+            }
+
+            if($outing->getEndDate() > new \DateTime('now')){
+                $this->addFlash('danger', "A moins de maîtriser le voyage temporel, il est impossible de terminer après la date actuelle");
+                return $this->redirectToRoute('outings_edit', ['outing' => $outing->getId()]);
+            }
+
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($outing);
+            $manager->flush();
+
+            $this->addFlash("success", "Votre sortie a bien été modifiée");
+            $this->redirectToRoute("outings_index");
+        }
+
+        return $this->render('outing/edit.html.twig', [
+            'form' => $form->createView(),
+            'outing' => $outing,
         ]);
     }
 }
