@@ -55,7 +55,7 @@ class OutingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($outing->getStartDate() >= $outing->getEndDate()) {
+            if ($outing->getStartDate() > $outing->getEndDate()) {
                 $this->addFlash('danger', "A moins de courir plus vite que la vitesse de la lumière ou de maîtriser le voyage temporel, il est impossible de terminer avant d'avoir commencé.");
                 return $this->redirectToRoute('outing_add');
             }
@@ -105,7 +105,7 @@ class OutingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($outing->getStartDate() >= $outing->getEndDate()) {
+            if ($outing->getStartDate() > $outing->getEndDate()) {
                 $this->addFlash('danger', "A moins de courir plus vite que la vitesse de la lumière ou de maîtriser le voyage temporel, il est impossible de terminer avant d'avoir commencé.");
                 return $this->redirectToRoute('outing_edit', ['outing' => $outing->getId()]);
             }
