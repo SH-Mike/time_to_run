@@ -27,8 +27,8 @@ class OutingController extends AbstractController
             $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
             return $this->redirectToRoute('login');
         }
-
         $outings = $outingRepository->findByUser($this->getUser());
+
         return $this->render('outing/index.html.twig', [
             'outings' => $outings,
         ]);
@@ -41,30 +41,35 @@ class OutingController extends AbstractController
      * 
      * @return Response
      * 
-     * @Route("/outings/add", name="outings_add")
+     * @Route("/outings/add", name="outing_add")
      */
     public function addOuting(Request $request): Response
     {
+        if (!$this->getUser()) {
+            $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
+            return $this->redirectToRoute('login');
+        }
+
         $outing = new Outing();
         $form = $this->createForm(OutingTypeForm::class, $outing);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            if($outing->getStartDate() >= $outing->getEndDate()){
-                $this->addFlash('danger', "A moins de courir plus vite que la vitesse de la lumière ou de maîtriser le voyage temporel, il est impossible de terminer avant d'avoir commencé");
-                return $this->redirectToRoute('outings_add');
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($outing->getStartDate() >= $outing->getEndDate()) {
+                $this->addFlash('danger', "A moins de courir plus vite que la vitesse de la lumière ou de maîtriser le voyage temporel, il est impossible de terminer avant d'avoir commencé.");
+                return $this->redirectToRoute('outing_add');
             }
 
-            if($outing->getEndDate() > new \DateTime('now')){
-                $this->addFlash('danger', "A moins de maîtriser le voyage temporel, il est impossible de terminer après la date actuelle");
-                return $this->redirectToRoute('outings_add');
+            if ($outing->getEndDate() > new \DateTime('now')) {
+                $this->addFlash('danger', "A moins de maîtriser le voyage temporel, il est impossible de terminer après la date actuelle.");
+                return $this->redirectToRoute('outing_add');
             }
 
             $outing->setUser($this->getUser());
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($outing);
             $manager->flush();
-            $this->addFlash('success', 'Votre sortie a bien été ajoutée');
+            $this->addFlash('success', 'Votre sortie a bien été ajoutée.');
             return $this->redirectToRoute('outings_index');
         }
 
@@ -81,12 +86,17 @@ class OutingController extends AbstractController
      * 
      * @return Response
      * 
-     * @Route("/outings/edit/{outing}", name="outings_edit")
+     * @Route("/outings/edit/{outing}", name="outing_edit")
      */
     public function editOuting(Request $request, Outing $outing = null): Response
     {
-        if(!$outing){
-            $this->addFlash("danger", "La sortie que vous souhaitez modifier n'existe pas");
+        if (!$this->getUser()) {
+            $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
+            return $this->redirectToRoute('login');
+        }
+
+        if (!$outing) {
+            $this->addFlash("danger", "La sortie que vous souhaitez modifier n'existe pas.");
             return $this->redirectToRoute("outings_index");
         }
 
@@ -94,22 +104,22 @@ class OutingController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            if($outing->getStartDate() >= $outing->getEndDate()){
-                $this->addFlash('danger', "A moins de courir plus vite que la vitesse de la lumière ou de maîtriser le voyage temporel, il est impossible de terminer avant d'avoir commencé");
-                return $this->redirectToRoute('outings_edit', ['outing' => $outing->getId()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($outing->getStartDate() >= $outing->getEndDate()) {
+                $this->addFlash('danger', "A moins de courir plus vite que la vitesse de la lumière ou de maîtriser le voyage temporel, il est impossible de terminer avant d'avoir commencé.");
+                return $this->redirectToRoute('outing_edit', ['outing' => $outing->getId()]);
             }
 
-            if($outing->getEndDate() > new \DateTime('now')){
-                $this->addFlash('danger', "A moins de maîtriser le voyage temporel, il est impossible de terminer après la date actuelle");
-                return $this->redirectToRoute('outings_edit', ['outing' => $outing->getId()]);
+            if ($outing->getEndDate() > new \DateTime('now')) {
+                $this->addFlash('danger', "A moins de maîtriser le voyage temporel, il est impossible de terminer après la date actuelle.");
+                return $this->redirectToRoute('outing_edit', ['outing' => $outing->getId()]);
             }
 
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($outing);
             $manager->flush();
 
-            $this->addFlash("success", "Votre sortie a bien été modifiée");
+            $this->addFlash("success", "Votre sortie a bien été modifiée.");
             $this->redirectToRoute("outings_index");
         }
 
@@ -117,5 +127,39 @@ class OutingController extends AbstractController
             'form' => $form->createView(),
             'outing' => $outing,
         ]);
+    }
+
+    /**
+     * Deletes an Outing given in parameters
+     * 
+     * @param Outing $outing
+     * 
+     * @return Response
+     * 
+     * @Route("/outings/delete/{outing}", name="outing_delete")
+     */
+    public function deleteOuting(Outing $outing = null): Response
+    {
+        if (!$this->getUser()) {
+            $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
+            return $this->redirectToRoute('login');
+        }
+
+        if (!$outing) {
+            $this->addFlash("danger", "La sortie que vous souhaitez supprimer n'existe pas.");
+            return $this->redirectToRoute("outings_index");
+        }
+
+        if($outing->getUser() == $this->getUser()){
+            $manager = $this->getDoctrine()->getManager();
+            $manager->remove($outing);
+            $manager->flush();
+
+            $this->addFlash("success", "La sortie a bien été supprimée.");
+            return $this->redirectToRoute("outings_index");
+        } else {
+            $this->addFlash("danger", "Vous ne pouvez pas supprimer une sortie qui ne vous appartient pas.");
+            return $this->redirectToRoute("outings_index");
+        }
     }
 }
