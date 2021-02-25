@@ -127,12 +127,58 @@ class Outing
     }
 
     /**
+     * Function called to get the duration of an Outing
      * Duration is a calculated data, so we won't store it in database
+     * 
+     * @return float
      */
     public function getDuration(): ?float
     {
         $dateDifference = $this->getEndDate()->diff($this->getStartDate());
         $duration = number_format(($dateDifference->days * 24) + $dateDifference->h + ($dateDifference->i / 60), 2);
         return $duration;
+    }
+
+    /**
+     * Function called to get the average speed of an Outing
+     * Average speed is a calculated data, so we won't store it in database
+     * @return float
+     */
+    public function getAverageSpeed(): ?float
+    {
+        return $this->getDistance() / $this->getDuration();
+    }
+
+    /**
+     * Function called to get the average pace of an Outing
+     * Average pace is a calculated data, so we won't store it in database
+     * @return float
+     */
+    public function getAveragePace(): ?float
+    {
+        return round($this->getDuration() * 60 / $this->getDistance(), 2);
+    }
+
+    /**
+     * Function called to get the duration in the format 00h00
+     * @return String
+     */
+    public function getFormattedDuration(): ?String
+    {
+        $duration = $this->getDuration();
+        return sprintf('%02dh%02d', (int) $duration, round(fmod($duration, 1) * 60));
+    }
+
+    /**
+     * Function called to get the average pace in the format 00'00"
+     * @return String
+     */
+    public function getFormattedAveragePace(): ?String
+    {
+        $averageSpeed = round($this->getDuration() * 60 / $this->getDistance(), 2);
+        $arrayAverageSpeed = explode(".", $averageSpeed);
+        $minutes = $arrayAverageSpeed[0];
+        $seconds = (int) round($arrayAverageSpeed[1] * 60 / 100);
+        return $minutes . "'" . $seconds . "\"";
     }
 }

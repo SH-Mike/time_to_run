@@ -21,8 +21,8 @@
 						<th>Date de fin</th>
 						<th>Durée</th>
 						<th>Distance</th>
-						<th>Allure moyenne (km/h)</th>
-						<th>Vitesse moyenne (min/km)</th>
+						<th>Vitesse moyenne (km/h)</th>
+						<th>Allure moyenne (min/km)</th>
 						<th>Commentaire</th>
 						<th>-</th>
 					</tr>
@@ -34,8 +34,10 @@
 								<td>{{outing.outingType.title}}</td>
 								<td>{{outing.startDate | date('d/m/Y H:i:s')}}</td>
 								<td>{{outing.endDate | date('d/m/Y H:i:s')}}</td>
-								<td>{{outing.duration}}</td>
-								<td>{{outing.distance}}</td>
+								<td>{{outing.formattedDuration}}</td>
+								<td>{{outing.distance}}km</td>
+								<td>{{outing.averageSpeed | number_format(2)}}</td>
+								<td>{{outing.formattedAveragePace}}</td>
 								<td>{{outing.comment | raw}}</td>
 								<td>
 									<a href="#" class="btn btn-warning">
