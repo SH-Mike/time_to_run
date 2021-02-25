@@ -71,3 +71,7 @@ Ajout d'un formulaire de login, d'une route de login et de logout dans le UserCo
 11/ Calcul de la durée, de la vitesse moyenne et de l'allure moyenne  
 Ajout du calcul de la durée, de la vitesse et de l'allure moyenne dans l'entité User pour accès direct via un "getXXX()" comme pour n'importe quelle donnée stockée.  
 Note: Bien qu'il soit demandé dans le sujet de stocker ces 3 données, puisque ce sont des données calculées, j'ai pris la décision de ne pas les stocker. Elles sont accessibles à tout moment depuis un objet "Outing" via leurs "accesseurs".  
+
+12/ Création des fonctions d'ajout, de modification et de suppression de sorties (Outing)  
+Un bouton en haut de page permet l'ajout d'une sortie via un formulaire.  
+Deux boutons (jaune pour modification, rouge pour suppression) sur chaque ligne d'un tableau de sorties permettent de rediriger respectivement vers les pages de modification (où un formulaire reprenant les informations de la sortie est affiché) et de suppression (qui redirige systématiquement en affichant un message à l'utilisateur selon la bonne suppression ou non des données).  
