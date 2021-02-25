@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Outing;
 use App\Repository\OutingRepository;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +27,7 @@ class ApiController extends AbstractController
         // Getting all the Outings
         $outings = $outingRepository->findAll();
 
-        if(!$outings){
+        if (!$outings) {
             return new Response('Aucune sortie n\'a été trouvée.', 404);
         }
 
@@ -53,7 +54,7 @@ class ApiController extends AbstractController
         return $response;
     }
 
-        /**
+    /**
      * Api function to get all the Outings
      * 
      * @param OutingRepository $outingRepository
@@ -61,12 +62,12 @@ class ApiController extends AbstractController
      * 
      * @Route("/api/outings/list/{user}", name="api_outings_user_list", methods={"GET"})
      */
-    public function outingsUser(OutingRepository $outingRepository, User $user = null): Response
+    public function getUserOutings(OutingRepository $outingRepository, User $user = null): Response
     {
         // We instantiate the error code
         $error = 200;
 
-        if(!$user){
+        if (!$user) {
             $error = 404;
             return new Response('Cet utilisateur n\'existe pas.', $error);
         }
@@ -74,9 +75,9 @@ class ApiController extends AbstractController
         // Getting all the Outings
         $outings = $outingRepository->findBy(['user' => $user]);
 
-        if(!$outings){
+        if (!$outings) {
             $error = 404;
-            return new Response('Cet utilisateur n\'a effectué aucune sortie.');
+            return new Response('Cet utilisateur n\'a effectué aucune sortie.', $error);
         }
         // We use JSON Encoder
         $encoders = [new JsonEncoder()];
@@ -89,6 +90,48 @@ class ApiController extends AbstractController
 
         // We convert into JSON and instantiate the Response
         $jsonOutings = $serializer->serialize($outings, 'json', [
+            'circular_reference_handler' => function ($object) {
+                return $object->getId();
+            }
+        ]);
+        $response = new Response($jsonOutings);
+
+        // We specify HTTP header request
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
+     * Api function to get one Outing
+     * 
+     * @param OutingRepository $outingRepository
+     * @param Outing $outing
+     * @return Response
+     * 
+     * @Route("/api/outing/{outing}", name="api_outing", methods={"GET"})
+     */
+    public function getOuting(OutingRepository $outingRepository, Outing $outing = null): Response
+    {
+        // We instantiate the error code
+        $error = 200;
+
+        if (!$outing) {
+            $error = 404;
+            return new Response('Cette sortie n\'existe pas.', $error);
+        }
+        
+        // We use JSON Encoder
+        $encoders = [new JsonEncoder()];
+
+        // We use a normalizer to convert collection into array
+        $normalizers = [new ObjectNormalizer()];
+
+        // We instantiate the converter
+        $serializer = new Serializer($normalizers, $encoders);
+
+        // We convert into JSON and instantiate the Response
+        $jsonOutings = $serializer->serialize($outing, 'json', [
             'circular_reference_handler' => function ($object) {
                 return $object->getId();
             }
