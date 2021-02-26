@@ -87,3 +87,6 @@ Améliorations du code.
 Création d'un contrôleur OutingTypeController faisant la gestion des différentes fonction CRUD (Create, Read, Update, Delete).  
 Création d'un formulaire OutingTypeType permettant l'ajout et la modification des types de sorties.  
 Création des templates pour affichage des écrans.  
+
+16/ Revue de code finale  
+Dernières retouches sur le code.  
