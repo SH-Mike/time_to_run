@@ -1,8 +1,8 @@
 # time-to-run
 This is a technical test project, for StadLine company
 
-Sujet :
--------
+Sujet
+---
 Créer un site permettant la gestion de sorties de courses à pied.
 Une sortie de course à pied est définie comme ceci :  
   • Utilisateur  
@@ -28,8 +28,18 @@ Une API doit être mise à disposition. Cette API ne doit pas être sécurisée.
   •lister les sorties d'un utilisateur  
   •récupérer le détail d'une sortie  
 
-------
-Description des étapes réalisées :  
+Installation du projet  
+---
+1. Créer la base de données "time_to_run" sur un serveur de base de données MySQL  
+2. Cloner le projet "git clone https://github.com/SH-Mike/time_to_run.git"  
+3. Se mettre dans le dossier "time_to_run" et exécuter la commande "composer install" pour récupérer les composants Symfony nécessaires à l’utilisation de l’application    
+  3.1 NB : Des problèmes ont parfois été rencontrés lors de l’installation du projet sur d’autres machines, à cause du package fzaninotto/faker. Pour pallier toute éventualité, exécuter également la commande "composer require fzaninotto/faker"  
+4. Exécuter la commande "php bin/console doctrine:migrations:migrate" pour générer la structure des tables telles que décrites dans les différentes migrations Doctrine  
+5. Exécuter la commande "php bin/console doctrine:fixtures:load" pour intégrer les données de test, contenues dans la fixture développée, dans la base de données   
+6. Pour lancer un serveur web PHP et commencer à utiliser l’application, exécuter la commande "php -S localhost:8000 -t public/", se connecter ensuite à l’url http://localhost:8000/ pour naviguer sur la partie site web de l’application.  
+
+Description des étapes réalisées
+---
 1/ Création de l'entité "User" et de son repository  
 Commande utilisée "php bin/console make:entity User".  
 Migration créée pour modification de la base de données via Doctrine.  
@@ -90,3 +100,5 @@ Création des templates pour affichage des écrans.
 
 16/ Revue de code finale  
 Dernières retouches sur le code.  
+
+J'estime avoir passé un peu plus de 6h sur le développement de ce projet (hors documentation)
