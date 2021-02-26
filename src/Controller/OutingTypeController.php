@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\OutingTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,12 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class OutingTypeController extends AbstractController
 {
     /**
-     * @Route("/outing/type", name="outing_type")
+     * @Route("/outing-types", name="outing_type_index")
      */
-    public function index(): Response
+    public function index(OutingTypeRepository $outingTypeRepository): Response
     {
+        $outingTypes = $outingTypeRepository->findAll();
         return $this->render('outing_type/index.html.twig', [
-            'controller_name' => 'OutingTypeController',
+            'outingTypes' => $outingTypes,
         ]);
     }
 }
