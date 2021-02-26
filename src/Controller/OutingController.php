@@ -176,7 +176,7 @@ class OutingController extends AbstractController
             }
 
             $this->addFlash("success", "Votre sortie a bien été modifiée.");
-            $this->redirectToRoute("outings_index");
+            return $this->redirectToRoute("outings_index");
         }
 
         //We return the response page
