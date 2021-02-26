@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use App\Repository\OutingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=OutingRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Outing
 {
@@ -31,16 +34,20 @@ class Outing
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type(type="dateTime", message="Veuillez entrer une date valide")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type(type="dateTime", message="Veuillez entrer une date valide")
      */
     private $endDate;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Type(type="float", message="Veuillez entrer un nombre valide")
+     * @Assert\GreaterThan(value=0, message="Veuillez entrer un nombre supérieur à 0")
      */
     private $distance;
 
