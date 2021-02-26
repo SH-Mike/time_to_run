@@ -75,3 +75,15 @@ Note: Bien qu'il soit demandé dans le sujet de stocker ces 3 données, puisque 
 12/ Création des fonctions d'ajout, de modification et de suppression de sorties (Outing)  
 Un bouton en haut de page permet l'ajout d'une sortie via un formulaire.  
 Deux boutons (jaune pour modification, rouge pour suppression) sur chaque ligne d'un tableau de sorties permettent de rediriger respectivement vers les pages de modification (où un formulaire reprenant les informations de la sortie est affiché) et de suppression (qui redirige systématiquement en affichant un message à l'utilisateur selon la bonne suppression ou non des données).  
+
+13/ Création de l'API  
+Création d'un contrôleur contenant les 3 fonctions API (liste des sorties, liste des sorties d'un utilisateur, détail d'une sortie).  
+
+14/ Revue de code et tests  
+Correction des bugs (format de données).  
+Améliorations du code.  
+
+15/ Partie bonus - Création d'une page de gestion des types de sorties  
+Création d'un contrôleur OutingTypeController faisant la gestion des différentes fonction CRUD (Create, Read, Update, Delete).  
+Création d'un formulaire OutingTypeType permettant l'ajout et la modification des types de sorties.  
+Création des templates pour affichage des écrans.  
