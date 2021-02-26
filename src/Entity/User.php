@@ -7,6 +7,8 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -32,11 +34,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type(type="datetime")
      */
     private $birthDate;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Type(type="Symfony\Component\Mime\Address")
      */
     private $email;
 
