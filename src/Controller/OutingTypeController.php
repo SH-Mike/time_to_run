@@ -40,6 +40,12 @@ class OutingTypeController extends AbstractController
      * @Route("/outing-types/add", name="outing_type_add")
      */
     public function add(Request $request){
+
+        if (!$this->getUser()) {
+            $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
+            return $this->redirectToRoute('login');
+        }
+
         $outingType = new OutingType();
         $form = $this->createForm(OutingTypeType::class, $outingType);
         $form->handleRequest($request);
@@ -54,6 +60,47 @@ class OutingTypeController extends AbstractController
 
         return $this->render('outing_type/add.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Edits an OutingType from the submitted form, if not submitted, shows the form
+     * 
+     * @param Request $request
+     * @param OutingType $outingType
+     * 
+     * @return Response
+     * 
+     * @Route("/outing-types/edit/{outingType}", name="outing_type_edit")
+     */
+    public function editOuting(Request $request, OutingType $outingType = null): Response
+    {
+        if (!$this->getUser()) {
+            $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
+            return $this->redirectToRoute('login');
+        }
+
+        if (!$outingType) {
+            $this->addFlash("danger", "Le type de sortie que vous souhaitez modifier n'existe pas.");
+            return $this->redirectToRoute("outing_types_index");
+        }
+
+        $form = $this->createForm(OutingTypeType::class, $outingType);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($outingType);
+            $manager->flush();
+
+            $this->addFlash("success", "Votre type sortie a bien été modifié.");
+            return $this->redirectToRoute("outing_types_index");
+        }
+
+        return $this->render('outing_type/edit.html.twig', [
+            'form' => $form->createView(),
+            'outingType' => $outingType,
         ]);
     }
 }
