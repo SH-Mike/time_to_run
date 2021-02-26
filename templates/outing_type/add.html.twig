@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	OutingType add
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1 class="text-center underlined">Ajouter un type de sortie</h1>
+		<div class="text-center mt-3"> Utiliser le formulaire ci-dessous pour ajouter un type de sortie. </div>
+        {{form_start(form)}}
+        {{form_end(form)}}
+	</div>
+{% endblock %}

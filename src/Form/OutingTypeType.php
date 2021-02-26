@@ -3,16 +3,19 @@
 namespace App\Form;
 
 use App\Entity\OutingType;
-use Symfony\Component\Form\AbstractType;
+use App\Form\ApplicationType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class OutingTypeType extends AbstractType
+class OutingTypeType extends ApplicationType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
+            ->add('title', TextType::class, $this->getConfiguration('Nom du type de sortie', "Quel nom donner ?"))
+            ->add('submit', SubmitType::class, $this->getConfiguration('Envoyer', ''))
         ;
     }
 
