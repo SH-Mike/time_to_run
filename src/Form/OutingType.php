@@ -29,8 +29,16 @@ class OutingType extends ApplicationType
             ->add('endDate', DateTimeType::class, $this->getConfiguration('Date de fin', '', [
                 'widget' => 'single_text'
             ]))
-            ->add('distance', NumberType::class, $this->getConfiguration('Distance parcourue', 'Laisser vide pour 0',))
-            ->add('comment', TextType::class, $this->getConfiguration('Commentaire', 'Quelles ont été vos impressions sur votre sortie ?'))
+            ->add('distance', NumberType::class, $this->getConfiguration('Distance parcourue', 'Quelle distance avez-vous parcourue ?',[
+                'attr' => [
+                    'min' => '0.1',
+                    'max' => '1000'
+                ],
+                'required' => true
+            ]))
+            ->add('comment', TextType::class, $this->getConfiguration('Commentaire', 'Quelles ont été vos impressions sur votre sortie ?', [
+                'required' => false
+            ]))
             ->add('submit', SubmitType::class, $this->getConfiguration('Envoyer',''))
         ;
     }
