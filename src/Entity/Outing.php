@@ -143,7 +143,6 @@ class Outing
     {
         $dateDifference = $this->getEndDate()->diff($this->getStartDate());
         $duration = number_format(($dateDifference->days * 24) + $dateDifference->h + ($dateDifference->i / 60), 2);
-        dump($duration);
         return $duration;
     }
 
@@ -185,7 +184,6 @@ class Outing
     {
         $averageSpeed = round($this->getDuration() * 60 / $this->getDistance(), 2);
         $arrayAverageSpeed = explode(".", $averageSpeed);
-        dump($arrayAverageSpeed);
         $minutes = $arrayAverageSpeed[0];
         if(isset($arrayAverageSpeed[1])){
             $seconds = (int) round(str_pad($arrayAverageSpeed[1], 2, '0', STR_PAD_RIGHT) * 60 / 100);
