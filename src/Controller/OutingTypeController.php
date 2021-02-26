@@ -23,11 +23,16 @@ class OutingTypeController extends AbstractController
      */
     public function index(OutingTypeRepository $outingTypeRepository): Response
     {
-        //We get the outing types list
-        try{
-            $outingTypes = $outingTypeRepository->findAll();
+        //Test if the user is connected
+        if (!$this->getUser()) {
+            $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
+            return $this->redirectToRoute('login');
         }
-        catch(\Exception $e){
+
+        //We get the outing types list
+        try {
+            $outingTypes = $outingTypeRepository->findAll();
+        } catch (\Exception $e) {
             $this->addFlash("danger", "Une erreur est survenue lors de la récupération des types de sortie.");
             return $this->redirectToRoute("homepage");
         }
@@ -38,7 +43,7 @@ class OutingTypeController extends AbstractController
         ]);
     }
 
-    
+
     /**
      * Adds an OutingType to the database from the submitted form, if not submitted, shows the form
      * 
@@ -48,7 +53,8 @@ class OutingTypeController extends AbstractController
      * 
      * @Route("/outing-types/add", name="outing_type_add")
      */
-    public function add(Request $request){
+    public function add(Request $request)
+    {
         //Test if the user is connected
         if (!$this->getUser()) {
             $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
@@ -62,14 +68,13 @@ class OutingTypeController extends AbstractController
         //We handle the request and check if the form has been submitted
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             //We try to add the outing type to the database and redirect the user depending on the result
-            try{
+            try {
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($outingType);
                 $manager->flush();
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->addFlash("danger", "Une erreur est survenue lors de l'ajout de ce type de sortie.");
                 return $this->redirectToRoute("outing_types_index");
             }
@@ -115,12 +120,11 @@ class OutingTypeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             //We try to edit the outing type in the database and redirect the user depending on the result
-            try{
+            try {
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($outingType);
                 $manager->flush();
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->addFlash("danger", "Une erreur est survenue lors de la modification de ce type de sortie.");
                 return $this->redirectToRoute("outing_types_index");
             }
@@ -160,12 +164,11 @@ class OutingTypeController extends AbstractController
         }
 
         //We try to delete the outing type from the database and redirect the user depending on the result
-        try{
+        try {
             $manager = $this->getDoctrine()->getManager();
             $manager->remove($outingType);
             $manager->flush();
-        } 
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->addFlash("danger", "Une erreur est survenue lors de la suppression de ce type de sortie.");
             return $this->redirectToRoute("outing_types_index");
         }
