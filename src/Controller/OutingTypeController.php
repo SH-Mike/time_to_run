@@ -103,4 +103,39 @@ class OutingTypeController extends AbstractController
             'outingType' => $outingType,
         ]);
     }
+
+    /**
+     * Deletes an OutingType given in parameters
+     * 
+     * @param Outing $outing
+     * 
+     * @return Response
+     * 
+     * @Route("/outing-types/delete/{outingType}", name="outing_type_delete")
+     */
+    public function deleteOuting(OutingType $outingType = null): Response
+    {
+        if (!$this->getUser()) {
+            $this->addFlash('danger', "Vous devez être connecté pour visiter cette page.");
+            return $this->redirectToRoute('login');
+        }
+
+        if (!$outingType) {
+            $this->addFlash("danger", "Le type de sortie que vous souhaitez supprimer n'existe pas.");
+            return $this->redirectToRoute("outing_types_index");
+        }
+
+        try{
+            $manager = $this->getDoctrine()->getManager();
+            $manager->remove($outingType);
+            $manager->flush();
+        } 
+        catch(\Exception $e) {
+            $this->addFlash("danger", "Une erreur est survenue lors de la suppression de ce type de sortie.");
+            return $this->redirectToRoute("outing_types_index");
+        }
+
+        $this->addFlash("success", "Le type de sortie a bien été supprimée.");
+        return $this->redirectToRoute("outing_types_index");
+    }
 }
